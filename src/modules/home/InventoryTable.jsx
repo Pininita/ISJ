@@ -32,7 +32,7 @@ const InventoryTable = () => {
 
     const data = [
         {
-            type: "Ingreso",
+            type: "ingreso",
             quantity: 5000,
             date: "10/09/24",
             city: "Armenia",
@@ -40,12 +40,20 @@ const InventoryTable = () => {
             description: "Venta"
         },
         {
-            type: "Egreso",
+            type: "egreso",
             quantity: 2000,
             date: "11/10/24",
             city: "Circasia",
             place: "Bodega",
             description: "Mercancia"
+        },
+        {
+            type: "ingreso",
+            quantity: 6000,
+            date: "10/09/24",
+            city: "Armenia",
+            place: "Unicentro",
+            description: "Venta"
         }
     ]
 
