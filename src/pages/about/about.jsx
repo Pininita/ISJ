@@ -22,8 +22,8 @@ const AboutPage = () => {
                 📧 Puedes escribirme a: <strong>devdanielsanabria@gmail.com</strong>
             </p>
             <p>
-                📱 O contáctame por <a href="https://wa.me/573126898866" target="_blank"
-                                      rel="noopener noreferrer">WhatsApp</a>
+                📱 O contáctame por <a className='text-blue-600 hover:text-blue-400' href="https://wa.me/573126898866" target="_blank"
+                                      rel="noopener noreferrer">WhatsApp</a> +57 312 689 8866
             </p>
         </div>
     );

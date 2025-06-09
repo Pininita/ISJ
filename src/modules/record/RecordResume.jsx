@@ -37,7 +37,7 @@ function RecordResume({transactions}) {
         <div className="p-4 rounded-lg shadow-md flex flex-col gap-2">
             <h2 className="text-xl font-bold mb-4">Resumen Financiero</h2>
 
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="md:grid md:grid-cols-3 md:gap-4 md:mb-4 flex flex-col gap-4 ">
                 <div className="bg-green-100 p-3 rounded-lg">
                     <p className="text-sm text-green-800">Total Ingresos</p>
                     <p className="text-2xl font-bold text-green-600">${formatter.format(totalIncome)}</p>
