@@ -8,7 +8,7 @@ const HomeForm = () => {
     const [startDate, setStartDate] = useState(null);
 
     return (
-        <div className='flex justify-center'>
+        <div className="flex justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 py-10">
             <Formik
                 initialValues={{
                     tipo: '',
@@ -23,28 +23,27 @@ const HomeForm = () => {
                 }}
             >
                 {({ setFieldValue }) => (
-                    <Form className="max-w-sm m-4 w-full shadow-xl/20 rounded-lg">
-                        <div className="flex flex-col gap-4 m-2">
-                            {/* Tipo */}
-                            <div className="flex justify-evenly items-center">
-                                <div>
-                                    <label htmlFor="type" className="sr-only text-lg">Tipo</label>
-                                    <Field
-                                        as="select"
-                                        id="type"
-                                        name="type"
-                                        className="p-2 block w-full text-lg text-gray-500 bg-transparent border-2 rounded-lg border-gray-200 dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                                    >
-                                        <option value="">Tipo</option>
-                                        <option value="ingreso">Ingreso</option>
-                                        <option value="egreso">Egreso</option>
-                                    </Field>
-                                </div>
+                    <Form className="max-w-lg w-full bg-white shadow-2xl rounded-2xl p-8 border border-blue-200">
+                        <h2 className="text-2xl font-bold text-blue-700 mb-6 text-center">Registrar Movimiento</h2>
+                        <div className="flex flex-col gap-6">
+                            {/* Type */}
+                            <div>
+                                <label htmlFor="type" className="block text-lg font-semibold text-blue-600 mb-2">Tipo</label>
+                                <Field
+                                    as="select"
+                                    id="type"
+                                    name="type"
+                                    className="p-3 w-full text-base text-blue-700 bg-blue-50 border-2 rounded-lg border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                                >
+                                    <option value="">Selecciona tipo</option>
+                                    <option value="ingreso">Ingreso</option>
+                                <option value="egreso">Egreso</option>
+                                </Field>
                             </div>
-                            {/* Fecha y dinero */}
-                            <div className="flex gap-4">
-                                <div>
-                                    <label className="block text-base font-medium text-gray-700 mb-1">Fecha</label>
+                            {/* Date nad cash */}
+                            <div className="flex gap-6">
+                                <div className="flex-1">
+                                    <label className="block text-base font-semibold text-blue-600 mb-2">Fecha</label>
                                     <DatePicker
                                         selected={startDate}
                                         onChange={(date) => {
@@ -52,57 +51,60 @@ const HomeForm = () => {
                                             setFieldValue('date', date);
                                         }}
                                         dateFormat="yyyy-MM-dd"
-                                        className="w-full rounded-md border border-gray-300 p-3 text-base shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                        className="w-full rounded-lg border-2 border-blue-200 p-3 text-base bg-blue-50 text-blue-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-300 transition"
                                         placeholderText="Selecciona una fecha"
                                     />
                                 </div>
-                                <div>
+                                <div className="flex-1">
                                     <label htmlFor="quantity"
-                                           className="block mb-1 text-base font-medium text-gray-900 dark:text-white">
+                                           className="block text-base font-semibold text-blue-600 mb-2">
                                         Dinero/Cantidad
                                     </label>
                                     <Field
                                         type="number"
                                         id="quantity"
                                         name="quantity"
-                                        className="w-full rounded-md border border-gray-300 p-3 text-base shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                        className="w-full rounded-lg border-2 border-blue-200 p-3 text-base bg-blue-50 text-blue-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-300 transition"
                                     />
                                 </div>
                             </div>
-                            {/* Ciudad y lugar */}
-                            <div className="flex gap-4">
-                                <div>
-                                    <label className="block text-base font-medium text-gray-700 mb-1">Ciudad</label>
+                            {/* City and place */}
+                            <div className="flex gap-6">
+                                <div className="flex-1">
+                                    <label className="block text-base font-semibold text-blue-600 mb-2">Ciudad</label>
                                     <Field
                                         type="text"
                                         name="city"
                                         placeholder="Ej. Armenia"
-                                        className="w-full rounded-md border border-gray-300 p-3 text-base shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                        className="w-full rounded-lg border-2 border-blue-200 p-3 text-base bg-blue-50 text-blue-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-300 transition"
                                     />
                                 </div>
-                                <div className="mb-4">
-                                <label className="block text-base font-medium text-gray-700 mb-1">Lugar</label>
+                                <div className="flex-1">
+                                    <label className="block text-base font-semibold text-blue-600 mb-2">Lugar</label>
                                     <Field
                                         type="text"
                                         name="place"
                                         placeholder="Ej. Unicentro"
-                                        className="w-full rounded-md border border-gray-300 p-3 text-base shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                        className="w-full rounded-lg border-2 border-blue-200 p-3 text-base bg-blue-50 text-blue-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-300 transition"
                                     />
                                 </div>
                             </div>
-                            {/* Descripción */}
-                            <div className="p-3 relative w-full min-w-[200px]">
+                            {/* Description */}
+                            <div>
                                 <label htmlFor="message"
-                                       className="block mb-2 text-base font-medium text-gray-900 dark:text-white">Your
-                                    message</label>
-                                <textarea id="message" rows="4"
-                                          className="block p-4 w-full text-base text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                          placeholder="Descripcion de la accion, Ej. Mercancia,Pago cliente, Domicilio,etc "></textarea>
+                                       className="block text-base font-semibold text-blue-600 mb-2">
+                                    Descripción
+                                </label>
+                                <textarea
+                                    id="message"
+                                    rows="4"
+                                    className="block w-full p-4 text-base text-blue-700 bg-blue-50 rounded-lg border-2 border-blue-200 focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition"
+                                    placeholder="Descripción de la acción, Ej. Mercancía, Pago cliente, Domicilio, etc."
+                                ></textarea>
                             </div>
-
                             <button
                                 type="submit"
-                                className="m-2 bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                                className="mt-4 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition transform hover:scale-105"
                             >
                                 Guardar
                             </button>

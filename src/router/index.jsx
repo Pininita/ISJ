@@ -6,7 +6,7 @@ import Navbar from "../layouts/dashboard/component/navbar.jsx";
 
 const Layout = () => {
     return (
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-1'>
             <Navbar />
             <Outlet />
         </div>
