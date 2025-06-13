@@ -5,28 +5,39 @@ import {AiFillAliwangwang} from "react-icons/ai";
 
 const Navbar = () => {
     return (
-            <div className='bg-blue-400 h-10'>
-                <ul className='flex flex-row justify-center items-center gap-16 h-full'>
+        <nav className="bg-white shadow-md">
+            <div className="max-w-5xl mx-auto px-10">
+                <ul className="flex justify-between items-center h-14">
                     <li>
-                        <Link to='/home' className='cursor-pointer flex items-center gap-2 text-lg'>
-                           <FaHome />
+                        <Link
+                            to="/home"
+                            className="flex items-center gap-2 px-4 py-2 rounded-md text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition-colors duration-200 font-semibold"
+                        >
+                            <FaHome size={20} />
                             Inicio
                         </Link>
                     </li>
                     <li>
-                        <Link to='/record' className='cursor-pointer flex items-center gap-2 text-lg'>
-                            <FaHistory />
+                        <Link
+                            to="/record"
+                            className="flex items-center gap-2 px-4 py-2 rounded-md text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition-colors duration-200 font-semibold"
+                        >
+                            <FaHistory size={20} />
                             Historial
                         </Link>
                     </li>
                     <li>
-                        <Link to='/about' className='cursor-pointer flex items-center gap-2 text-lg'>
-                            <AiFillAliwangwang />
+                        <Link
+                            to="/about"
+                            className="flex items-center gap-2 px-4 py-2 rounded-md text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition-colors duration-200 font-semibold"
+                        >
+                            <AiFillAliwangwang size={22} />
                             Acerca
                         </Link>
                     </li>
                 </ul>
             </div>
+        </nav>
     );
 };
 
