@@ -40,21 +40,8 @@ const HomeForm = () => {
                                 <option value="egreso">Egreso</option>
                                 </Field>
                             </div>
-                            {/* Date nad cash */}
+                            {/* Cash */}
                             <div className="flex gap-6">
-                                <div className="flex-1">
-                                    <label className="block text-base font-semibold text-blue-600 mb-2">Fecha</label>
-                                    <DatePicker
-                                        selected={startDate}
-                                        onChange={(date) => {
-                                            setStartDate(date);
-                                            setFieldValue('date', date);
-                                        }}
-                                        dateFormat="yyyy-MM-dd"
-                                        className="w-full rounded-lg border-2 border-blue-200 p-3 text-base bg-blue-50 text-blue-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-300 transition"
-                                        placeholderText="Selecciona una fecha"
-                                    />
-                                </div>
                                 <div className="flex-1">
                                     <label htmlFor="quantity"
                                            className="block text-base font-semibold text-blue-600 mb-2">
