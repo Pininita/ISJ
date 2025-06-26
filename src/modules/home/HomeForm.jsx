@@ -1,11 +1,29 @@
-import { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React, { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import {
+  FaMoneyBillWave,
+  FaCity,
+  FaMapMarkerAlt,
+  FaAlignLeft,
+  FaCheckCircle,
+} from "react-icons/fa";
 
+const validationSchema = Yup.object({
+  tipo: Yup.string().required("Selecciona un tipo"),
+  quantity: Yup.number()
+    .typeError("Debe ser un número")
+    .positive("Debe ser un número positivo")
+    .required("Campo obligatorio"),
+  city: Yup.string().required("Ingresa la ciudad"),
+  place: Yup.string().required("Ingresa el lugar"),
+  description: Yup.string()
+    .min(5, "Mínimo 5 caracteres")
+    .required("Agrega una descripción"),
+});
 
 const HomeForm = () => {
-    const [startDate, setStartDate] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
     return (
         <div className="flex justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 py-10">
