@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_ME } from '../../../gql/queries';
+import { GET_ME } from '@/gql/queries';
 
 const AuthContext = createContext();
 

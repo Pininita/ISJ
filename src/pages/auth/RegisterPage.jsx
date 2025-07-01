@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Link, useNavigate } from 'react-router-dom';
-import { REGISTER_MUTATION } from '../../gql/queries';
+import { REGISTER_MUTATION } from '@/gql/queries';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({

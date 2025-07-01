@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Link, useNavigate } from 'react-router-dom';
-import { LOGIN_MUTATION } from '../../gql/queries';
-import { useAuth } from '../../modules/auth/context/AuthContext';
+import { LOGIN_MUTATION } from '@/gql/queries';
+import { useAuth } from '@/modules/auth/context/AuthContext';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
