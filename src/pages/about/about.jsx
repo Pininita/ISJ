@@ -2,8 +2,8 @@ import React from 'react';
 
 const AboutPage = () => {
     return (
-        <div>
-            <h1>Sobre esta aplicación</h1>
+        <div className='flex flex-col p-2 gap-2'>
+            <h1 className='text-blue-500 text-lg font-bold py-2'>Sobre esta aplicación</h1>
             <p>
                 Esta herramienta fue creada con el único propósito de llevar un control
                 sencillo y práctico de ingresos y egresos monetarios. Fue desarrollada
