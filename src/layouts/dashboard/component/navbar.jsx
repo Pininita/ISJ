@@ -72,7 +72,7 @@ const Navbar = () => {
 
           {/* Navigation Links - Centro (Desktop) */}
           <div className="hidden md:block">
-            <div className="flex items-center space-x-1">
+            <div className="flex space-x-10">
               {navigationLinks.map((item, index) => (
                 <MenuLink
                   key={index}
