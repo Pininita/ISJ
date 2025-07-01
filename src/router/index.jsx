@@ -1,12 +1,12 @@
 // routes/index.js - Tu router actualizado con autenticación
 import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
-import HomePage from "../pages/home/Home.jsx";
-import RecordPage from "../pages/record/record.jsx";
-import AboutPage from "../pages/about/about.jsx";
-import LoginPage from "../pages/auth/LoginPage.jsx";
-import RegisterPage from "../pages/auth/RegisterPage.jsx";
-import Navbar from "../layouts/dashboard/component/navbar.jsx";
-import { useAuth } from "../modules/auth/context/AuthContext.jsx";
+import HomePage from "@/pages/home/Home.jsx";
+import RecordPage from "@/pages/record/record.jsx";
+import AboutPage from "@/pages/about/about.jsx";
+import LoginPage from "@/pages/auth/LoginPage.jsx";
+import RegisterPage from "@/pages/auth/RegisterPage.jsx";
+import Navbar from "@/layouts/dashboard/component/navbar.jsx";
+import { useAuth } from "@/modules/auth/context/AuthContext.jsx";
 
 // Layout protegido con Navbar
 const ProtectedLayout = () => {
