@@ -1,14 +1,33 @@
 {
-    "compilerOptions": {
-      "baseUrl": "src",
-      "paths": {
-        "@/*": ["*"],
-        "@/components/*": ["components/*"],
-        "@/modules/*": ["modules/*"],
-        "@/hooks/*": ["hooks/*"],
-        "@/utils/*": ["utils/*"],
-        "@/assets/*": ["assets/*"]
-      }
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"],
+      "@/components/*": ["components/*"],
+      "@/modules/*": ["modules/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/utils/*": ["utils/*"],
+      "@/assets/*": ["assets/*"]
     },
-    "include": ["src"]
-  }
+    "target": "es2020",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+
+// despues de la linea 11 se agregaron esas lineas de codigo
+// para que funcione el path de los imports en el proyecto
+// ademas se instalo la extension ES7+ React/Redux/React-Native snippets

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Link, useNavigate } from 'react-router-dom';
 import { REGISTER_MUTATION } from '@/gql/queries';
+import ToastProvider from '@/components/ui/Toast/ToastProvider'
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -178,6 +179,7 @@ const RegisterPage = () => {
                         >
                             {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
                         </button>
+                        <ToastProvider/>
                     </div>
                 </form>
             </div>
