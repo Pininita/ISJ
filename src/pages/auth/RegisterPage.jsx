@@ -61,7 +61,7 @@ const RegisterPage = () => {
                 }
             });
 
-            if (data.createUser.success) {
+            if (data?.createUser?.user?.id) {
                 navigate('/auth/login', { 
                     state: { message: 'Cuenta creada exitosamente. Inicia sesión.' }
                 });
@@ -70,7 +70,12 @@ const RegisterPage = () => {
             }
         } catch (error) {
             console.error('Error de registro:', error);
-            setErrors({ general: 'Error al crear la cuenta. Intenta de nuevo.' });
+            if(error.graphQLErrors?.length > 0) {
+                const errorMessage = error.graphQLErrors[0].message;
+                setErrors({ general: errorMessage });
+            } else {
+                setErrors({ general: 'Error al crear la cuenta. Intenta de nuevo.' });
+            }
         }
     };
 

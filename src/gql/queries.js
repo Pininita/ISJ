@@ -13,8 +13,6 @@ export const LOGIN_MUTATION = gql`
 export const REGISTER_MUTATION = gql`
     mutation CreateUser($username: String!, $email: String!, $password: String!) {
         createUser(username: $username, email: $email, password: $password) {
-            success
-            errors
             user {
                 id
                 username
