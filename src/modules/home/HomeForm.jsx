@@ -11,7 +11,8 @@ import {
 import { notifications } from "@/components/ui/Toast/ToastNotifications";
 import { CREATE_TRANSACTION_MUTATION } from "@/gql/mutations";
 import { useMutation } from "@apollo/client";
-import { useAuth } from "../auth/context/AuthContext";
+// import { useAuth } from "../auth/context/AuthContext";
+import { useMe } from "../auth/hooks/useMe";
 
 const validationSchema = Yup.object({
   type: Yup.string().required("Selecciona un type"),
@@ -30,10 +31,12 @@ const HomeForm = () => {
 
   const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION_MUTATION)
   
-  const { user } = useAuth();
-  const userId = user?.id || user?.userId
+  const me = useMe();
 
-  console.log("ID del usuario:", userId);
+  console.log("ID del usuario:", me);
+
+  const tokenVerify= localStorage.getItem('access_token')
+  console.log('token: ', tokenVerify)
 
   const handleSubmit = async (values, { resetForm, setSubmitting }) => {
     try {
@@ -49,7 +52,6 @@ const HomeForm = () => {
         city: values.city,
         location: values.location,
         transactionType: transactionTypeMap[values.type.toLowerCase()],        
-        userId: userId,
       }
 
       console.log("Datos de la transacción:", transactionData);
