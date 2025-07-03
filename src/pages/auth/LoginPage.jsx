@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Link, useNavigate } from 'react-router-dom';
-import { LOGIN_MUTATION } from '@/gql/queries';
+import { LOGIN_MUTATION } from '@/gql/mutations';
 import { useAuth } from '@/modules/auth/context/AuthContext';
+import { notifications } from '@/components/ui/Toast/ToastNotifications';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const LoginPage = () => {
             ...formData,
             [e.target.name]: e.target.value
         });
-        // Limpiar error específico al escribir
+
         if (errors[e.target.name]) {
             setErrors({
                 ...errors,
@@ -51,14 +52,16 @@ const LoginPage = () => {
                 };
                 
                 login(data.tokenAuth.token, userData);
-                navigate('/'); // Redirigir al home
+                notifications.loginSuccess()
+                navigate('/home'); // Redirigir al home
             }
         } catch (error) {
             console.error('Error de login:', error);
+            notifications.loginError(error)
             setErrors({
                 general: 'Credenciales inválidas. Por favor, intenta de nuevo.'
             });
-        }
+        } 
     };
 
     return (
