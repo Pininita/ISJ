@@ -1,37 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import { useMe } from '../auth/hooks/useMe';
 
-function RecordResume({transactions}) {
+function RecordResume({}) {
 
     const me = useMe();
     const totalIncome = me?.totalIncome
     const totalExpense = me?.totalExpense
     const balance = me?.balance
 
-    // useEffect(() => {
-    //     if (transactions && Array.isArray(transactions)) {
-    //         const income = transactions
-    //             .filter((t) => t.type === 'ingreso')
-    //             .reduce((sum, transaction) => sum + Number(transaction.quantity), 0)
-
-    //         const expense = transactions
-    //             .filter((t) => t.type === 'egreso')
-    //             .reduce((sum, transaction) => sum + Number(transaction.quantity), 0)
-
-    //         const balance = income - expense
-
-    //         setTotalIncome(income);
-    //         setTotalExpense(expense);
-    //         setNetBalance(balance);
-    //     }
-    // }, [transactions])
-
     const formatter = new Intl.NumberFormat('es-ES', {
         style: 'decimal',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     })
-
 
     return (
         <div className="p-4 rounded-lg shadow-md flex flex-col gap-2">
