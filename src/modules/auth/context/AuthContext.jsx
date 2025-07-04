@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import { GET_ME } from '@/gql/queries';
 
 const AuthContext = createContext();
@@ -13,27 +13,17 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+    const client = useApolloClient();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // Verificar si hay token al cargar
     const token = localStorage.getItem('access_token');
-    
-    // Debug: Verificar token
-    console.log('Token encontrado:', token ? 'Sí' : 'No');
-    
+
     const { data, loading: queryLoading, error } = useQuery(GET_ME, {
         skip: !token,
         errorPolicy: 'ignore'
-    });
-
-    // Debug: Mostrar datos de la query
-    console.log('Query GET_ME:', {
-        data,
-        loading: queryLoading,
-        error,
-        skip: !token
     });
 
     useEffect(() => {
@@ -54,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
         if (!queryLoading) {
             if (data?.me) {
-                console.log('Usuario encontrado:', data.me);
+                // console.log('Usuario encontrado:', data.me);
                 setUser(data.me);
                 setIsAuthenticated(true);
             } else if (error) {
@@ -70,16 +60,23 @@ export const AuthProvider = ({ children }) => {
         }
     }, [data, queryLoading, error, token]);
 
-    const login = (token, userData) => {
+    const login = async (token, userData) => {
         console.log('Login ejecutado:', { token: !!token, userData });
         localStorage.setItem('access_token', token);
         setUser(userData);
         setIsAuthenticated(true);
+
+        await client.clearStore();
+        await client.refetchQueries({
+            include: [GET_ME],
+        });
     };
 
-    const logout = () => {
+    const logout = async () => {
         console.log('Logout ejecutado');
         localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        await client.clearStore();
         setUser(null);
         setIsAuthenticated(false);
     };
@@ -91,14 +88,6 @@ export const AuthProvider = ({ children }) => {
         login,
         logout
     };
-
-    // Debug: Estado actual
-    console.log('Estado actual del contexto:', {
-        user,
-        isAuthenticated,
-        loading,
-        userId: user?.id
-    });
 
     return (
         <AuthContext.Provider value={value}>

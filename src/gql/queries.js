@@ -23,13 +23,16 @@ export const GET_TRANSACTIONS = gql`
               node {
                 id
                 amount
-                transactionType
                 city
                 location
                 description
+                transactionType
                 createdAt
+                user {
+                  id
+                }
               }
             }
-        }
+          }
     }
 `;

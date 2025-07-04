@@ -6,6 +6,7 @@ const MenuButton = ({
     className = "",
     iconSize = 16,
     variant = "default", // default, primary, secondary
+    onClick
 }) => {
     const getVariantClasses = () => {
         switch (variant) {
@@ -18,7 +19,7 @@ const MenuButton = ({
     }
   return (
     <button
-    onClick={onclick}
+    onClick={onClick}
     className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors duration-200 dont-medium ${getVariantClasses()} ${className}`}
     >
         <Icon size={iconSize} />
