@@ -1,21 +1,20 @@
-import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, makeVar } from '@apollo/client'
+import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from '@apollo/client'
 import { AUTH_TOKEN_KEY } from './src/modules/auth/constants'
 
-export const authTokenReactiveVar = makeVar(localStorage.getItem(AUTH_TOKEN_KEY))
+// export const authTokenReactiveVar = makeVar(localStorage.getItem(AUTH_TOKEN_KEY))
 
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_API_GRAPHQL_URL,
 })
 
 const authLink = new ApolloLink((operation, forward) => {
-  const authToken = authTokenReactiveVar()
+  const authToken = localStorage.getItem('access_token')
 
   if (authToken) {
-    const parsedAuthToken = JSON.parse(authToken)
     operation.setContext(({ headers = {} }) => ({
       headers: {
         ...headers,
-        authorization: `JWT ${parsedAuthToken}`,
+        Authorization: `JWT ${authToken}`,
       },
     }))
   }

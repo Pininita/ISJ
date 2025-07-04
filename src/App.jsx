@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import client from "../client.js";
 import router from "@/router/index.jsx";
 import { AuthProvider } from "@/modules/auth/context/AuthContext.jsx"
+import MeProvider from '@/modules/auth/context/MeProvider.jsx';
 
 
 function App() {
@@ -10,7 +11,9 @@ function App() {
         <>
             <ApolloProvider client={client}>
                 <AuthProvider>
-                    <RouterProvider router={router} />
+                    <MeProvider>
+                        <RouterProvider router={router} />
+                    </MeProvider>
                 </AuthProvider>
             </ApolloProvider>
         </>

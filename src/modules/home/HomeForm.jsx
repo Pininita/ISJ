@@ -8,22 +8,73 @@ import {
   FaAlignLeft,
   FaCheckCircle,
 } from "react-icons/fa";
+import { notifications } from "@/components/ui/Toast/ToastNotifications";
+import { CREATE_TRANSACTION_MUTATION } from "@/gql/mutations";
+import { useMutation, useQuery } from "@apollo/client";
+// import { useAuth } from "../auth/context/AuthContext";
+import { useMe } from "../auth/hooks/useMe";
+import { GET_TRANSACTIONS } from '@/gql/queries';
 
 const validationSchema = Yup.object({
-  tipo: Yup.string().required("Selecciona un tipo"),
-  quantity: Yup.number()
+  type: Yup.string().required("Selecciona un type"),
+  amount: Yup.number()
     .typeError("Debe ser un número")
     .positive("Debe ser un número positivo")
     .required("Campo obligatorio"),
   city: Yup.string().required("Ingresa la ciudad"),
-  place: Yup.string().required("Ingresa el lugar"),
+  location: Yup.string().required("Ingresa el lugar"),
   description: Yup.string()
     .min(5, "Mínimo 5 caracteres")
     .required("Agrega una descripción"),
 });
 
 const HomeForm = () => {
-  const [showSuccess, setShowSuccess] = useState(false);
+
+  const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION_MUTATION, {
+    refetchQueries: [{ query: GET_TRANSACTIONS }],
+    awaitRefetchQueries: true,
+  })
+  
+  const me = useMe();
+
+  // const tokenVerify = localStorage.getItem('access_token')
+
+  const handleSubmit = async (values, { resetForm, setSubmitting }) => {
+    try {
+
+      const transactionTypeMap = {
+        'ingreso': 'INCOME',
+        'egreso': 'EXPENSE'
+      };
+      
+      const transactionData = {
+        description: values.description,
+        amount: parseFloat(values.amount),
+        city: values.city,
+        location: values.location,
+        transactionType: transactionTypeMap[values.type.toLowerCase()],        
+        userId: me?.id, // Asegúrate de que 'me' tenga la estructura correcta
+      }
+
+      const { data } = await createTransaction({
+        variables: transactionData,
+      })
+
+      console.log(data);
+
+      if (data?.createTransaction?.transaction?.id){
+        notifications.transactionAdded(`$${values.amount.toLocaleString()}`)
+      resetForm();
+      } else {
+        notifications.transactionError("Error al registrar el movimiento");
+      }
+    } catch (error) {
+      console.error("Error al registrar movimiento:", error);
+      notifications.transactionError("Error al registrar el movimiento");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 py-10 px-4">
@@ -32,38 +83,23 @@ const HomeForm = () => {
           Registrar Movimiento
         </h2>
 
-        {showSuccess && (
-          <div
-            className="flex items-center bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-6 text-sm"
-            role="alert"
-          >
-            <FaCheckCircle className="mr-2" />
-            <p>¡Movimiento registrado con éxito!</p>
-          </div>
-        )}
-
         <Formik
           initialValues={{
-            tipo: "",
-            quantity: "",
+            type: "",
+            amount: "",
             description: "",
             city: "",
-            place: "",
+            location: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={(values, { resetForm }) => {
-            console.log(values);
-            setShowSuccess(true);
-            setTimeout(() => setShowSuccess(false), 4000);
-            resetForm();
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, resetForm }) => (
             <Form>
-              {/* Tipo */}
+              {/* type */}
               <div className="mb-6">
                 <label
-                  htmlFor="tipo"
+                  htmlFor="type"
                   className="block text-base font-semibold text-blue-700 mb-1"
                 >
                   Tipo <span className="text-red-500">*</span>
@@ -72,10 +108,10 @@ const HomeForm = () => {
                   <FaMoneyBillWave className="absolute left-3 top-3 text-blue-600 text-base" />
                   <Field
                     as="select"
-                    id="tipo"
-                    name="tipo"
+                    id="type"
+                    name="type"
                     aria-required="true"
-                    aria-describedby="tipoError"
+                    aria-describedby="typeError"
                     className="pl-10 pr-3 py-3 w-full text-base text-blue-700 bg-blue-50 border-2 rounded-xl border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   >
                     <option value="">Selecciona tipo</option>
@@ -84,9 +120,9 @@ const HomeForm = () => {
                   </Field>
                 </div>
                 <ErrorMessage
-                  name="tipo"
+                  name="type"
                   component="div"
-                  id="tipoError"
+                  id="typeError"
                   className="text-red-600 text-xs mt-1"
                 />
               </div>
@@ -94,7 +130,7 @@ const HomeForm = () => {
               {/* Dinero/Cantidad */}
               <div className="mb-6">
                 <label
-                  htmlFor="quantity"
+                  htmlFor="amount"
                   className="block text-base font-semibold text-blue-700 mb-1"
                 >
                   Dinero/Cantidad <span className="text-red-500">*</span>
@@ -103,18 +139,18 @@ const HomeForm = () => {
                   <FaMoneyBillWave className="absolute left-3 top-3 text-blue-600 text-base" />
                   <Field
                     type="number"
-                    id="quantity"
-                    name="quantity"
+                    id="amount"
+                    name="amount"
                     aria-required="true"
-                    aria-describedby="quantityError"
+                    aria-describedby="amountError"
                     placeholder="Ej. 50000"
                     className="pl-10 pr-3 py-3 w-full rounded-xl border-2 border-blue-300 text-base bg-blue-50 text-blue-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 transition shadow-sm"
                   />
                 </div>
                 <ErrorMessage
-                  name="quantity"
+                  name="amount"
                   component="div"
-                  id="quantityError"
+                  id="amountError"
                   className="text-red-600 text-xs mt-1"
                 />
               </div>
@@ -149,7 +185,7 @@ const HomeForm = () => {
                 </div>
                 <div className="flex-1">
                   <label
-                    htmlFor="place"
+                    htmlFor="location"
                     className="block text-base font-semibold text-blue-700 mb-1"
                   >
                     Lugar <span className="text-red-500">*</span>
@@ -158,18 +194,18 @@ const HomeForm = () => {
                     <FaMapMarkerAlt className="absolute left-3 top-3 text-blue-600 text-base" />
                     <Field
                       type="text"
-                      id="place"
-                      name="place"
+                      id="location"
+                      name="location"
                       aria-required="true"
-                      aria-describedby="placeError"
+                      aria-describedby="locationError"
                       placeholder="Ej. Unicentro"
                       className="pl-10 pr-3 py-3 w-full rounded-xl border-2 border-blue-300 text-base bg-blue-50 text-blue-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 transition shadow-sm"
                     />
                   </div>
                   <ErrorMessage
-                    name="place"
+                    name="location"
                     component="div"
-                    id="placeError"
+                    id="locationError"
                     className="text-red-600 text-xs mt-1"
                   />
                 </div>
@@ -211,7 +247,7 @@ const HomeForm = () => {
                   disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-bold py-3 rounded-2xl shadow-lg transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
                 >
-                  Guardar
+                  {isSubmitting ? 'Guardando...' : 'Guardar'}
                   <FaCheckCircle />
                 </button>
 

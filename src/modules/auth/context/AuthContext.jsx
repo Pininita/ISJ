@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import { GET_ME } from '@/gql/queries';
 
 const AuthContext = createContext();
@@ -13,20 +13,29 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+    const client = useApolloClient();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // Verificar si hay token al cargar
     const token = localStorage.getItem('access_token');
-    
+
     const { data, loading: queryLoading, error } = useQuery(GET_ME, {
         skip: !token,
         errorPolicy: 'ignore'
     });
 
     useEffect(() => {
+        console.log('useEffect ejecutado:', {
+            token: !!token,
+            queryLoading,
+            data,
+            error
+        });
+
         if (!token) {
+            console.log('No hay token, limpiando estado...');
             setLoading(false);
             setIsAuthenticated(false);
             setUser(null);
@@ -35,26 +44,39 @@ export const AuthProvider = ({ children }) => {
 
         if (!queryLoading) {
             if (data?.me) {
+                // console.log('Usuario encontrado:', data.me);
                 setUser(data.me);
                 setIsAuthenticated(true);
             } else if (error) {
+                console.log('Error en query:', error);
                 // Token inválido o expirado
                 localStorage.removeItem('access_token');
                 setIsAuthenticated(false);
                 setUser(null);
+            } else {
+                console.log('No hay datos ni error, pero query terminó');
             }
             setLoading(false);
         }
     }, [data, queryLoading, error, token]);
 
-    const login = (token, userData) => {
+    const login = async (token, userData) => {
+        console.log('Login ejecutado:', { token: !!token, userData });
         localStorage.setItem('access_token', token);
         setUser(userData);
         setIsAuthenticated(true);
+
+        await client.clearStore();
+        await client.refetchQueries({
+            include: [GET_ME],
+        });
     };
 
-    const logout = () => {
+    const logout = async () => {
+        console.log('Logout ejecutado');
         localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        await client.clearStore();
         setUser(null);
         setIsAuthenticated(false);
     };

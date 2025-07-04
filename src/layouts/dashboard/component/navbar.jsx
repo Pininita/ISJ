@@ -34,8 +34,9 @@ const Navbar = () => {
     }
   ];
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    console.log("CLICK LOGOUT");
+    await logout();
     navigate('/auth/login');
     setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);
