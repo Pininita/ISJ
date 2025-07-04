@@ -20,8 +20,6 @@ const InventoryTable = () => {
     maximumFractionDigits: 2
 })
 
-  console.log('transactions: ', transactions);
-
   const columns = [
     
     {
