@@ -6,6 +6,7 @@ import { useAuth } from '@/modules/auth/context/AuthContext';
 import MenuLink from '@/components/navbar/MenuLink'; 
 import MenuButton from '@/components/navbar/MenuButton';
 import UserInfo from '@/components/navbar/UserInfo';
+import client from '../../../../client';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -34,8 +35,9 @@ const Navbar = () => {
     }
   ];
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    console.log("CLICK LOGOUT");
+    await logout();
     navigate('/auth/login');
     setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);

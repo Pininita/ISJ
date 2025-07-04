@@ -1,17 +1,18 @@
-import React from 'react';
 import DataTable from 'react-data-table-component';
 import { FaChevronDown } from 'react-icons/fa';
-import { GET_TRANSACTIONS } from '@/gql/queries';
-import { useQuery } from '@apollo/client';
+import { useTransactions } from '../auth/hooks/useTransactions';
 
 const InventoryTable = () => {
-  const {data, loading, error} = useQuery(GET_TRANSACTIONS);
+  const { transactions, loading, error} = useTransactions()
 
   if (loading) return <p>Cargando...</p>
   if (error) return <p>Error: {error.message}</p>
 
-  const transactions = (data?.transactions?.edges.map(edge => edge.node) || [])
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  const sortedTransactions = [...transactions].sort((a, b) => {
+    const dateA = new Date(a.createdAt || 0);
+    const dateB = new Date(b.createdAt || 0);
+    return dateB - dateA;
+  });
 
   const formatter = new Intl.NumberFormat('es-ES', {
     style: 'decimal',
@@ -19,7 +20,7 @@ const InventoryTable = () => {
     maximumFractionDigits: 2
 })
 
-  console.log('Transactions: ', transactions);
+  console.log('transactions: ', transactions);
 
   const columns = [
     
@@ -35,7 +36,7 @@ const InventoryTable = () => {
     },
     {
       name: 'Fecha',
-      selector: row => row.createdAt,
+      selector: row =>  new Date(row.createdAt).toLocaleDateString(),
       sortable: true,
     },
     {
@@ -113,7 +114,7 @@ const InventoryTable = () => {
       <DataTable
         title={<h2 className="text-2xl font-bold text-blue-700 mb-4">Últimos Datos</h2>}
         columns={columns}
-        data={transactions}
+        data={sortedTransactions}
         pagination
         paginationPerPage={10}
         expandableRows

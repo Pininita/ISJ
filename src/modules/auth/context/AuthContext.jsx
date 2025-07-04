@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import { GET_ME } from '@/gql/queries';
 
 const AuthContext = createContext();
@@ -13,6 +13,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+    const client = useApolloClient();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,12 +27,12 @@ export const AuthProvider = ({ children }) => {
     });
 
     useEffect(() => {
-        // console.log('useEffect ejecutado:', {
-        //     token: !!token,
-        //     queryLoading,
-        //     data,
-        //     error
-        // });
+        console.log('useEffect ejecutado:', {
+            token: !!token,
+            queryLoading,
+            data,
+            error
+        });
 
         if (!token) {
             console.log('No hay token, limpiando estado...');
@@ -59,16 +60,23 @@ export const AuthProvider = ({ children }) => {
         }
     }, [data, queryLoading, error, token]);
 
-    const login = (token, userData) => {
+    const login = async (token, userData) => {
         console.log('Login ejecutado:', { token: !!token, userData });
         localStorage.setItem('access_token', token);
         setUser(userData);
         setIsAuthenticated(true);
+
+        await client.clearStore();
+        await client.refetchQueries({
+            include: [GET_ME],
+        });
     };
 
-    const logout = () => {
+    const logout = async () => {
         console.log('Logout ejecutado');
         localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        await client.clearStore();
         setUser(null);
         setIsAuthenticated(false);
     };

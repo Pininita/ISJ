@@ -14,8 +14,6 @@ const LoginPage = () => {
     
     const navigate = useNavigate();
     const { login } = useAuth();
-
-    console.log('GraphQL URL:', import.meta.env.VITE_API_GRAPHQL_URL);
     
     const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION);
 
