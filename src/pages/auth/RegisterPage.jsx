@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Link, useNavigate } from 'react-router-dom';
-import { REGISTER_MUTATION } from '@/gql/queries';
+import { REGISTER_MUTATION } from '@/gql/mutations';
+import { notifications } from '@/components/ui/Toast/ToastNotifications';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -62,20 +63,28 @@ const RegisterPage = () => {
             });
 
             if (data?.createUser?.user?.id) {
-                navigate('/auth/login', { 
-                    state: { message: 'Cuenta creada exitosamente. Inicia sesión.' }
-                });
+                notifications.accountCreated(formData.username);
+                setTimeout(() => {
+                    navigate('/auth/login')
+                }, 1500)
+                
             } else {
-                setErrors({ general: 'Error al crear la cuenta. Intenta de nuevo.' });
+                notifications.accountError('Error al crear la cuenta. Intentalo de nuevo.')
+                setErrors({ general: 'Error al crear la cuenta. Inténtalo de nuevo.' });
             }
         } catch (error) {
             console.error('Error de registro:', error);
+
+            const errorMessage = 'Error al crear la cuenta. Inténtalo de nuevo.';
+
             if(error.graphQLErrors?.length > 0) {
-                const errorMessage = error.graphQLErrors[0].message;
                 setErrors({ general: errorMessage });
             } else {
                 setErrors({ general: 'Error al crear la cuenta. Intenta de nuevo.' });
             }
+
+            notifications.accountError(errorMessage);
+            setErrors({ general: errorMessage });
         }
     };
 
