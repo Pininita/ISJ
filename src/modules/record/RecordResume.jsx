@@ -1,30 +1,30 @@
 import React, {useEffect, useState} from 'react';
+import { useMe } from '../auth/hooks/useMe';
 
 function RecordResume({transactions}) {
-    const [totalIncome, setTotalIncome] = useState(0)
-    const [totalExpense, setTotalExpense] = useState(0)
-    const [netBalance, setNetBalance] = useState(0)
 
-    // const trans = transactions.transactions.map((t) => t.quantity)
-    // console.log(transactions.transactions)
+    const me = useMe();
+    const totalIncome = me?.totalIncome
+    const totalExpense = me?.totalExpense
+    const balance = me?.balance
 
-    useEffect(() => {
-        if (transactions && Array.isArray(transactions)) {
-            const income = transactions
-                .filter((t) => t.type === 'ingreso')
-                .reduce((sum, transaction) => sum + Number(transaction.quantity), 0)
+    // useEffect(() => {
+    //     if (transactions && Array.isArray(transactions)) {
+    //         const income = transactions
+    //             .filter((t) => t.type === 'ingreso')
+    //             .reduce((sum, transaction) => sum + Number(transaction.quantity), 0)
 
-            const expense = transactions
-                .filter((t) => t.type === 'egreso')
-                .reduce((sum, transaction) => sum + Number(transaction.quantity), 0)
+    //         const expense = transactions
+    //             .filter((t) => t.type === 'egreso')
+    //             .reduce((sum, transaction) => sum + Number(transaction.quantity), 0)
 
-            const balance = income - expense
+    //         const balance = income - expense
 
-            setTotalIncome(income);
-            setTotalExpense(expense);
-            setNetBalance(balance);
-        }
-    }, [transactions])
+    //         setTotalIncome(income);
+    //         setTotalExpense(expense);
+    //         setNetBalance(balance);
+    //     }
+    // }, [transactions])
 
     const formatter = new Intl.NumberFormat('es-ES', {
         style: 'decimal',
@@ -48,10 +48,10 @@ function RecordResume({transactions}) {
                     <p className="text-2xl font-bold text-red-600">${formatter.format(totalExpense)}</p>
                 </div>
 
-                <div className={`p-3 rounded-lg ${netBalance >= 0 ? 'bg-blue-100' : 'bg-orange-100'}`}>
-                    <p className={`text-sm ${netBalance >= 0 ? 'text-blue-800' : 'text-orange-800'}`}>Balance Neto</p>
-                    <p className={`text-2xl font-bold ${netBalance >= 0 ? 'text-blue-600' : 'text-orange-600'}`}>
-                        ${formatter.format(netBalance)}
+                <div className={`p-3 rounded-lg ${balance >= 0 ? 'bg-blue-100' : 'bg-orange-100'}`}>
+                    <p className={`text-sm ${balance >= 0 ? 'text-blue-800' : 'text-orange-800'}`}>Balance Neto</p>
+                    <p className={`text-2xl font-bold ${balance >= 0 ? 'text-blue-600' : 'text-orange-600'}`}>
+                        ${formatter.format(balance)}
                     </p>
                 </div>
             </div>

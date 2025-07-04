@@ -45,6 +45,9 @@ export const CREATE_TRANSACTION_MUTATION = gql`
         id
         amount
         transactionType
+        city
+        location
+        description
       }
     }
   }

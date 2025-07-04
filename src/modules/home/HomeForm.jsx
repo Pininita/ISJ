@@ -13,6 +13,7 @@ import { CREATE_TRANSACTION_MUTATION } from "@/gql/mutations";
 import { useMutation } from "@apollo/client";
 // import { useAuth } from "../auth/context/AuthContext";
 import { useMe } from "../auth/hooks/useMe";
+import { GET_TRANSACTIONS } from '@/gql/queries';
 
 const validationSchema = Yup.object({
   type: Yup.string().required("Selecciona un type"),
@@ -29,14 +30,14 @@ const validationSchema = Yup.object({
 
 const HomeForm = () => {
 
-  const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION_MUTATION)
+  const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION_MUTATION, {
+    refetchQueries: [{ query: GET_TRANSACTIONS }],
+    awaitRefetchQueries: true,
+  })
   
   const me = useMe();
 
-  console.log("ID del usuario:", me);
-
-  const tokenVerify= localStorage.getItem('access_token')
-  console.log('token: ', tokenVerify)
+  // const tokenVerify = localStorage.getItem('access_token')
 
   const handleSubmit = async (values, { resetForm, setSubmitting }) => {
     try {
@@ -52,13 +53,14 @@ const HomeForm = () => {
         city: values.city,
         location: values.location,
         transactionType: transactionTypeMap[values.type.toLowerCase()],        
+        userId: me?.id, // Asegúrate de que 'me' tenga la estructura correcta
       }
-
-      console.log("Datos de la transacción:", transactionData);
 
       const { data } = await createTransaction({
         variables: transactionData,
       })
+
+      console.log(data);
 
       if (data?.createTransaction?.transaction?.id){
         notifications.transactionAdded(`$${values.amount.toLocaleString()}`)

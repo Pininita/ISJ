@@ -1,66 +1,58 @@
 import React from 'react';
 import DataTable from 'react-data-table-component';
 import { FaChevronDown } from 'react-icons/fa';
+import { GET_TRANSACTIONS } from '@/gql/queries';
+import { useQuery } from '@apollo/client';
 
 const InventoryTable = () => {
+  const {data, loading, error} = useQuery(GET_TRANSACTIONS);
+
+  if (loading) return <p>Cargando...</p>
+  if (error) return <p>Error: {error.message}</p>
+
+  const transactions = (data?.transactions?.edges.map(edge => edge.node) || [])
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
+  const formatter = new Intl.NumberFormat('es-ES', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+})
+
+  console.log('Transactions: ', transactions);
+
   const columns = [
+    
     {
       name: 'Tipo',
-      selector: row => row.type,
-      sortable: true,
+      selector: row => row.transactionType,
+      sortable: false,
     },
     {
       name: 'Cantidad',
-      selector: row => row.quantity,
+      selector: row => formatter.format(row.amount),
       sortable: true,
     },
     {
       name: 'Fecha',
-      selector: row => row.date,
+      selector: row => row.createdAt,
       sortable: true,
     },
     {
       name: 'Ciudad',
       selector: row => row.city,
-      sortable: true,
+      sortable: false,
     },
     {
       name: 'Lugar',
-      selector: row => row.place,
-      sortable: true,
+      selector: row => row.location,
+      sortable: false,
     },
     {
       name: 'Descripcion',
       selector: row => row.description,
       sortable: false,
-      wrap: true,
-    },
-  ];
-
-  const data = [
-    {
-      type: 'ingreso',
-      quantity: 5000,
-      date: '10/09/24',
-      city: 'Armenia',
-      place: 'Unicentro',
-      description: 'Venta',
-    },
-    {
-      type: 'egreso',
-      quantity: 2000,
-      date: '11/10/24',
-      city: 'Circasia',
-      place: 'Bodega',
-      description: 'Mercancia',
-    },
-    {
-      type: 'ingreso',
-      quantity: 6000,
-      date: '10/09/24',
-      city: 'Armenia',
-      place: 'Unicentro',
-      description: 'Venta',
+      wrap: false,
     },
   ];
 
@@ -121,14 +113,14 @@ const InventoryTable = () => {
       <DataTable
         title={<h2 className="text-2xl font-bold text-blue-700 mb-4">Últimos Datos</h2>}
         columns={columns}
-        data={data}
+        data={transactions}
         pagination
         paginationPerPage={10}
         expandableRows
         expandableRowsComponent={ExpandedComponent}
         customStyles={customStyles}
         highlightOnHover
-        defaultSortFieldId={1}
+        // defaultSortFieldId={1}
         sortIcon={<FaChevronDown />}
         responsive
       />
