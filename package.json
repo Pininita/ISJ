@@ -26,6 +26,8 @@
     "react-toastify": "^11.0.5",
     "styled-components": "^6.1.17",
     "tailwindcss": "^4.0.17",
+    "three": "^0.178.0",
+    "vanta": "^0.5.24",
     "yup": "^1.6.1"
   },
   "devDependencies": {
