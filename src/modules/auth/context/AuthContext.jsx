@@ -17,16 +17,16 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    // Verificar si hay token al cargar
-    const token = localStorage.getItem('access_token');
+    const [shouldFetchUser, setShouldFetchUser] = useState(false); // inicia como false
 
     const { data, loading: queryLoading, error } = useQuery(GET_ME, {
-        skip: !token,
+        skip: !shouldFetchUser,
         errorPolicy: 'ignore'
     });
 
     useEffect(() => {
+        const token = localStorage.getItem('access_token'); // ← aquí sí puedes leer el token
+
         console.log('useEffect ejecutado:', {
             token: !!token,
             queryLoading,
@@ -44,27 +44,24 @@ export const AuthProvider = ({ children }) => {
 
         if (!queryLoading) {
             if (data?.me) {
-                // console.log('Usuario encontrado:', data.me);
                 setUser(data.me);
                 setIsAuthenticated(true);
             } else if (error) {
                 console.log('Error en query:', error);
-                // Token inválido o expirado
                 localStorage.removeItem('access_token');
                 setIsAuthenticated(false);
                 setUser(null);
-            } else {
-                console.log('No hay datos ni error, pero query terminó');
             }
             setLoading(false);
         }
-    }, [data, queryLoading, error, token]);
+    }, [data, queryLoading, error]);
 
     const login = async (token, userData) => {
         console.log('Login ejecutado:', { token: !!token, userData });
         localStorage.setItem('access_token', token);
         setUser(userData);
         setIsAuthenticated(true);
+        setShouldFetchUser(true); // ← activa la consulta GET_ME
 
         await client.clearStore();
         await client.refetchQueries({
@@ -79,6 +76,7 @@ export const AuthProvider = ({ children }) => {
         await client.clearStore();
         setUser(null);
         setIsAuthenticated(false);
+        setShouldFetchUser(false);
     };
 
     const value = {
