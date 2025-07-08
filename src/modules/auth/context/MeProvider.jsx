@@ -4,7 +4,9 @@ import { GET_ME } from '@/gql/queries';
 import MeContext from './MeContext';
 
 const MeProvider = ({ children }) => {
-  const { data, loading } = useQuery(GET_ME);
+  const { data, loading } = useQuery(GET_ME,{
+    fetchPolicy: 'cache-and-network'
+  });
   const [me, setMe] = useState(null);
 
   useEffect(() => {
