@@ -13,7 +13,7 @@ import { CREATE_TRANSACTION_MUTATION } from "@/gql/mutations";
 import { useMutation, useQuery } from "@apollo/client";
 // import { useAuth } from "../auth/context/AuthContext";
 import { useMe } from "../auth/hooks/useMe";
-import { GET_TRANSACTIONS } from '@/gql/queries';
+import { GET_ME, GET_TRANSACTIONS } from '@/gql/queries';
 
 const validationSchema = Yup.object({
   type: Yup.string().required("Selecciona un type"),
@@ -31,7 +31,10 @@ const validationSchema = Yup.object({
 const HomeForm = () => {
 
   const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION_MUTATION, {
-    refetchQueries: [{ query: GET_TRANSACTIONS }],
+    refetchQueries: [
+      { query: GET_TRANSACTIONS },
+      { query: GET_ME }
+    ],
     awaitRefetchQueries: true,
   })
   
