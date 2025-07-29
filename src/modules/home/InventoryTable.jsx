@@ -14,6 +14,9 @@ const InventoryTable = () => {
     return dateB - dateA;
   });
 
+  console.log(transactions);
+  
+
   const formatter = new Intl.NumberFormat('es-ES', {
     style: 'decimal',
     minimumFractionDigits: 2,

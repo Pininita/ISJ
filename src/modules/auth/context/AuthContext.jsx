@@ -24,6 +24,9 @@ export const AuthProvider = ({ children }) => {
         errorPolicy: 'ignore'
     });
 
+    console.log(data, ' soy data ');
+    
+
     useEffect(() => {
         const token = localStorage.getItem('access_token'); // ← aquí sí puedes leer el token
 

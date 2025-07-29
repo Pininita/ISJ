@@ -9,6 +9,9 @@ export const useTransactions = () => {
     fetchPolicy: 'cache-and-network',
   });
 
+  console.log(data);
+  
+
   const transactions = data?.transactions?.edges
     ?.map(edge => edge.node)
     ?.filter(tx => tx.user?.id === user?.id) || [];
