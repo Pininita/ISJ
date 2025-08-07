@@ -3,6 +3,9 @@ import MeContext from '@/modules/auth/context/MeContext'
 
 export const useMe = () => {
     const me = useContext(MeContext)
+    console.log(me);
     if (!me || Object.keys(me).length === 0) return null;
     return me;
+    
+    
 }

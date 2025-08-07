@@ -5,16 +5,18 @@ import { useTransactions } from '../auth/hooks/useTransactions';
 const InventoryTable = () => {
   const { transactions, loading, error} = useTransactions()
 
+  // console.log(transactions);
+
   if (loading) return <p>Cargando...</p>
   if (error) return <p>Error: {error.message}</p>
 
-  const sortedTransactions = [...transactions].sort((a, b) => {
-    const dateA = new Date(a.createdAt || 0);
-    const dateB = new Date(b.createdAt || 0);
-    return dateB - dateA;
-  });
+  // const sortedTransactions = [...transactions].sort((a, b) => {
+  //   const dateA = new Date(a.createdAt || 0);
+  //   const dateB = new Date(b.createdAt || 0);
+  //   return dateB - dateA;
+  // });
 
-  console.log(transactions);
+  
   
 
   const formatter = new Intl.NumberFormat('es-ES', {
@@ -27,32 +29,32 @@ const InventoryTable = () => {
     
     {
       name: 'Tipo',
-      selector: row => row.transactionType,
+      selector: row => row.node?.transactionType || 'N/A',
       sortable: false,
     },
     {
       name: 'Cantidad',
-      selector: row => formatter.format(row.amount),
+      selector: row => formatter.format(row.node?.amount),
       sortable: true,
     },
     {
       name: 'Fecha',
-      selector: row =>  new Date(row.createdAt).toLocaleDateString(),
+      selector: row =>  new Date(row.node?.createdAt).toLocaleDateString(),
       sortable: true,
     },
     {
       name: 'Ciudad',
-      selector: row => row.city,
+      selector: row => row.node?.city,
       sortable: false,
     },
     {
       name: 'Lugar',
-      selector: row => row.location,
+      selector: row => row.node?.location,
       sortable: false,
     },
     {
       name: 'Descripcion',
-      selector: row => row.description,
+      selector: row => row.node?.description,
       sortable: false,
       wrap: false,
     },
@@ -115,7 +117,7 @@ const InventoryTable = () => {
       <DataTable
         title={<h2 className="text-2xl font-bold text-blue-700 mb-4">Últimos Datos</h2>}
         columns={columns}
-        data={sortedTransactions}
+        data={transactions}
         pagination
         paginationPerPage={10}
         expandableRows

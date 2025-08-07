@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { Link, useNavigate } from 'react-router-dom';
 import { LOGIN_MUTATION } from '@/gql/mutations';
@@ -7,7 +7,7 @@ import { notifications } from '@/components/ui/Toast/ToastNotifications';
 import { AuthLayout } from '@/layouts/auth/AuthLayout';
 
 const LoginPage = () => {
-    const [formData, setFormData] = useState({
+     const [formData, setFormData] = useState({
         username: '',
         password: ''
     });
@@ -15,8 +15,20 @@ const LoginPage = () => {
 
     const navigate = useNavigate();
     const { login } = useAuth();
-
     const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION);
+
+    // ⬇️ Al cargar la página, insertamos el usuario si no existe
+    useEffect(() => {
+        const existingUser = localStorage.getItem('test-user');
+        if (!existingUser) {
+            const fakeUser = {
+                username: 'test123',
+                email: 'test123@gmail.com',
+                password: 'test123'
+            };
+            localStorage.setItem('test-user', JSON.stringify(fakeUser));
+        }
+    }, []);
 
     const handleChange = (e) => {
         setFormData({
@@ -36,6 +48,23 @@ const LoginPage = () => {
         e.preventDefault();
         setErrors({});
 
+        // 🔐 Validar contra el usuario local
+        const savedUser = JSON.parse(localStorage.getItem('test-user'));
+
+        if (
+            savedUser &&
+            savedUser.username === formData.username &&
+            savedUser.password === formData.password
+        ) {
+            // Login simulado sin GraphQL
+            const tokenFake = 'fake-token-123';
+            login(tokenFake, { username: savedUser.username });
+            notifications.loginSuccess();
+            navigate('/home');
+            return;
+        }
+
+        // Si no coincide con el usuario local, intenta con GraphQL
         try {
             const { data } = await loginMutation({
                 variables: {
@@ -45,24 +74,22 @@ const LoginPage = () => {
             });
 
             if (data.tokenAuth.token) {
-                // Simular datos del usuario (en un caso real vendrían del backend)
                 const userData = {
                     username: formData.username,
                 };
 
                 login(data.tokenAuth.token, userData);
-                notifications.loginSuccess()
-                navigate('/home'); // Redirigir al home
+                notifications.loginSuccess();
+                navigate('/home');
             }
         } catch (error) {
             console.error('Error de login:', error);
-            notifications.loginError(error)
+            notifications.loginError(error);
             setErrors({
                 general: 'Credenciales inválidas. Por favor, intenta de nuevo.'
             });
         }
     };
-
     return (
         <AuthLayout>
             <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

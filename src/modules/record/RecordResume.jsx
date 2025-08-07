@@ -8,6 +8,9 @@ function RecordResume({}) {
     const totalExpense = me?.totalExpense
     const balance = me?.balance
 
+    // console.log(me);
+    
+
     const formatter = new Intl.NumberFormat('es-ES', {
         style: 'decimal',
         minimumFractionDigits: 2,
