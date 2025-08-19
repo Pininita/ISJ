@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
 import { Link, useNavigate } from 'react-router-dom';
-import { REGISTER_MUTATION } from '@/gql/mutations';
 import { notifications } from '@/components/ui/Toast/ToastNotifications';
 import { AuthLayout } from '@/layouts/auth/AuthLayout';
+import { boolean } from 'yup';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -13,9 +12,9 @@ const RegisterPage = () => {
         confirmPassword: ''
     });
     const [errors, setErrors] = useState({});
+    const [submitting, setSubmitting] = useState(false)
 
     const navigate = useNavigate();
-    const [registerMutation, { loading }] = useMutation(REGISTER_MUTATION);
 
     const handleChange = (e) => {
         setFormData({
@@ -50,44 +49,33 @@ const RegisterPage = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault() // previene que se recargue la pagina y perder los datos del formulario
 
-        if (!validateForm()) return;
+        if(!validateForm()) return;
 
-        try {
-            const { data } = await registerMutation({
-                variables: {
-                    username: formData.username,
-                    email: formData.email,
-                    password: formData.password
-                }
-            });
+        setSubmitting(true)
 
-            if (data?.createUser?.user?.id) {
-                notifications.accountCreated(formData.username);
-                setTimeout(() => {
-                    navigate('/auth/login')
-                }, 1500)
+        const fakeToken = Math.random().toString(36).substring(2)
 
-            } else {
-                notifications.accountError('Error al crear la cuenta. Intentalo de nuevo.')
-                setErrors({ general: 'Error al crear la cuenta. Inténtalo de nuevo.' });
-            }
-        } catch (error) {
-            console.error('Error de registro:', error);
-
-            const errorMessage = 'Error al crear la cuenta. Inténtalo de nuevo.';
-
-            if (error.graphQLErrors?.length > 0) {
-                setErrors({ general: errorMessage });
-            } else {
-                setErrors({ general: 'Error al crear la cuenta. Intenta de nuevo.' });
-            }
-
-            notifications.accountError(errorMessage);
-            setErrors({ general: errorMessage });
+        const newUser = {
+            id: Date.now(),
+            username: formData.username,
+            password: formData.password,
+            email: formData.email
         }
+
+        localStorage.setItem("authToken", fakeToken)
+        localStorage.setItem("user", JSON.stringify(newUser))
+
+        notifications.accountCreated(formData.username)
+
+        setTimeout(()=> {
+            setSubmitting(false)
+            navigate("/home")
+        },1500)
+
     };
+    
 
     return (
         <AuthLayout>
@@ -184,10 +172,10 @@ const RegisterPage = () => {
                         <div>
                             <button
                                 type="submit"
-                                disabled={loading}
+                                disabled={submitting}
                                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
+                                {submitting ? 'Creando cuenta...' : 'Crear Cuenta'}
                             </button>
                         </div>
                     </form>

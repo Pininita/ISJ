@@ -19,14 +19,14 @@ const LoginPage = () => {
 
     // ⬇️ Al cargar la página, insertamos el usuario si no existe
     useEffect(() => {
-        const existingUser = localStorage.getItem('test-user');
+        const existingUser = localStorage.getItem('user');
         if (!existingUser) {
             const fakeUser = {
                 username: 'test123',
                 email: 'test123@gmail.com',
                 password: 'test123'
             };
-            localStorage.setItem('test-user', JSON.stringify(fakeUser));
+            localStorage.setItem('user', JSON.stringify(fakeUser));
         }
     }, []);
 
@@ -49,7 +49,7 @@ const LoginPage = () => {
         setErrors({});
 
         // 🔐 Validar contra el usuario local
-        const savedUser = JSON.parse(localStorage.getItem('test-user'));
+        const savedUser = JSON.parse(localStorage.getItem('user'));
 
         if (
             savedUser &&
