@@ -5,20 +5,9 @@ import { useTransactions } from '../auth/hooks/useTransactions';
 const InventoryTable = () => {
   const { transactions, loading, error} = useTransactions()
 
-  // console.log(transactions);
-
   if (loading) return <p>Cargando...</p>
   if (error) return <p>Error: {error.message}</p>
-
-  // const sortedTransactions = [...transactions].sort((a, b) => {
-  //   const dateA = new Date(a.createdAt || 0);
-  //   const dateB = new Date(b.createdAt || 0);
-  //   return dateB - dateA;
-  // });
-
   
-  
-
   const formatter = new Intl.NumberFormat('es-ES', {
     style: 'decimal',
     minimumFractionDigits: 2,

@@ -11,7 +11,6 @@ import {
 import { notifications } from "@/components/ui/Toast/ToastNotifications";
 import { CREATE_TRANSACTION_MUTATION } from "@/gql/mutations";
 import { useMutation, useQuery } from "@apollo/client";
-// import { useAuth } from "../auth/context/AuthContext";
 import { useMe } from "../auth/hooks/useMe";
 import { GET_ME, GET_TRANSACTIONS } from '@/gql/queries';
 

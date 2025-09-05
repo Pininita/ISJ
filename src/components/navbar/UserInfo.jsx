@@ -1,11 +1,7 @@
 import React from 'react'
 import { FaUser } from 'react-icons/fa'
 
-const UserInfo = ({
-    user,
-    email,
-    showAvatar = true
-}) => {
+const UserInfo = ({ user, email, showAvatar = true }) => {
   return (
     <div className='px-3 py-3 mb-2 bg-gray-50 rounded-lg'>
         <div className='flex items-center gap-3'>
