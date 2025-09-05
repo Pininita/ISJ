@@ -7,6 +7,9 @@ const httpLink = createHttpLink({
   uri: import.meta.env.VITE_API_GRAPHQL_URL,
 })
 
+console.log(import.meta.env.VITE_API_GRAPHQL_URL);
+
+
 const authLink = new ApolloLink((operation, forward) => {
   const authToken = localStorage.getItem('access_token')
 

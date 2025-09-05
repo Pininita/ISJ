@@ -29,7 +29,6 @@ export const CREATE_TRANSACTION_MUTATION = gql`
     $city: String!
     $location: String!
     $transactionType: TransactionType!
-    $userId: String!
   ) {
     createTransaction(
       input: {
@@ -38,7 +37,6 @@ export const CREATE_TRANSACTION_MUTATION = gql`
         city: $city
         location: $location
         transactionType: $transactionType
-        userId: $userId
       }
     ) {
       transaction {
