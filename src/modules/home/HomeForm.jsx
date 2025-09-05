@@ -40,22 +40,15 @@ const HomeForm = () => {
   
   const me = useMe();
 
-  // const tokenVerify = localStorage.getItem('access_token')
-
   const handleSubmit = async (values, { resetForm, setSubmitting }) => {
     try {
-
-      const transactionTypeMap = {
-        'ingreso': 'INCOME',
-        'egreso': 'EXPENSE'
-      };
       
       const transactionData = {
         description: values.description,
         amount: parseFloat(values.amount),
         city: values.city,
         location: values.location,
-        transactionType: transactionTypeMap[values.type.toLowerCase()],        
+        transactionType: values.type,   // toma el valor de INGRESO o EGRESO     
         userId: me?.id, // Asegúrate de que 'me' tenga la estructura correcta
       }
 
@@ -118,8 +111,8 @@ const HomeForm = () => {
                     className="pl-10 pr-3 py-3 w-full text-base text-blue-700 bg-blue-50 border-2 rounded-xl border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   >
                     <option value="">Selecciona tipo</option>
-                    <option value="ingreso">Ingreso</option>
-                    <option value="egreso">Egreso</option>
+                    <option value="INGRESO">Ingreso</option>
+                    <option value="EGRESO">Egreso</option>
                   </Field>
                 </div>
                 <ErrorMessage
